@@ -4,44 +4,44 @@ import pandas
 
 def format_integer(number: int, class_sep: str = " ") -> str:
 	"""
-    Formats an integer with a custom thousands' separator.
+	Formats an integer with a custom thousands' separator.
 
-    Args:
-        number (int): The integer to format.
-        class_sep (str): The thousands separator to use. Defaults to " ".
+	Args:
+		number (int): The integer to format.
+		class_sep (str): The thousands separator to use. Defaults to " ".
 
-    Returns:
-        str: The formatted integer string.
+	Returns:
+		str: The formatted integer string.
 
-    :Usage:
-        format_integer(1234567)
-        '1 234 567'
+	:Usage:
+		format_integer(1234567)
+		'1 234 567'
 
-        format_integer(1234567, class_sep=",")
-        '1,234,567'
-    """
+		format_integer(1234567, class_sep=",")
+		'1,234,567'
+	"""
 	return "{:,d}".format(number).replace(",", class_sep)
 
 
 def format_float(number: float, class_sep: str = " ", number_of_decimals: int = 2) -> str:
 	"""
-    Formats a float with a custom thousands separator and a specified number of decimal places.
+	Formats a float with a custom thousands separator and a specified number of decimal places.
 
-    Args:
-        number (float): The float to format.
-        class_sep (str): The thousands separator to use. Defaults to " ".
-        number_of_decimals (int): The number of decimal places to include. Defaults to 2.
+	Args:
+		number (float): The float to format.
+		class_sep (str): The thousands separator to use. Defaults to " ".
+		number_of_decimals (int): The number of decimal places to include. Defaults to 2.
 
-    Returns:
-        str: The formatted float string.
+	Returns:
+		str: The formatted float string.
 
-    :Usage:
-        format_float(1234567.89)
-        '1 234 567.89'
+	:Usage:
+		format_float(1234567.89)
+		'1 234 567.89'
 
-        format_float(1234567.89, class_sep=",", number_of_decimals=3)
-        '1,234,567.890'
-    """
+		format_float(1234567.89, class_sep=",", number_of_decimals=3)
+		'1,234,567.890'
+	"""
 	return ("{:,.%df}" % number_of_decimals).format(number).replace(",", class_sep)
 
 
@@ -57,33 +57,32 @@ def format_data_frame(
 		right_border: typing.Optional[str] = " ||",
 ) -> str:
 	"""
-    Formats a Pandas DataFrame into a string representation with borders and custom formatting.
+	Formats a Pandas DataFrame into a string representation with borders and custom formatting.
 
-    Args:
-        data_frame (DataFrame): The DataFrame to format.
-        float_format (typing.Union[str, typing.Callable[[float], str]]): The format string or a callable function for float values. Defaults to "%.2f".
-        integer_format (typing.Union[str, typing.Callable[[int], str]]): The format string or a callable function for integer values. Defaults to "%d".
-        columns_split (typing.Optional[str]): The string used to separate columns. Defaults to " || ".
-        header_border (typing.Optional[str]): The character used for the header border. Defaults to "=".
-        top_border (typing.Optional[str]): The character used for the top border. Defaults to "=".
-        left_border (typing.Optional[str]): The string used for the left border. Defaults to "|| ".
-        bottom_border (typing.Optional[str]): The character used for the bottom border. Defaults to "=".
-        right_border (typing.Optional[str]): The string used for the right border. Defaults to " ||".
+	Args:
+		data_frame (DataFrame): The DataFrame to format.
+		float_format (typing.Union[str, typing.Callable[[float], str]]): The format string or a callable function for float values. Defaults to "%.2f".
+		integer_format (typing.Union[str, typing.Callable[[int], str]]): The format string or a callable function for integer values. Defaults to "%d".
+		columns_split (typing.Optional[str]): The string used to separate columns. Defaults to " || ".
+		header_border (typing.Optional[str]): The character used for the header border. Defaults to "=".
+		top_border (typing.Optional[str]): The character used for the top border. Defaults to "=".
+		left_border (typing.Optional[str]): The string used for the left border. Defaults to "|| ".
+		bottom_border (typing.Optional[str]): The character used for the bottom border. Defaults to "=".
+		right_border (typing.Optional[str]): The string used for the right border. Defaults to " ||".
 
-    Returns:
-        str: The formatted string representation of the DataFrame.
+	Returns:
+		str: The formatted string representation of the DataFrame.
 
-    :Usage:
-        df = pandas.DataFrame({'A': [1, 2.5, 3], 'B': [4, 5, 6]})
-        =====================
-        || A || B ||
-        =====================
-        || 1  || 4 ||
-        || 2.5|| 5 ||
-        || 3  || 6 ||
-        =====================
-
-    """
+	:Usage:
+		df = pandas.DataFrame({'A': [1, 2.5, 3], 'B': [4, 5, 6]})
+		=====================
+		|| A || B ||
+		=====================
+		|| 1  || 4 ||
+		|| 2.5|| 5 ||
+		|| 3  || 6 ||
+		=====================
+	"""
 	new_dataframe: dict[typing.Hashable, typing.Any] = {}
 	
 	for header, column in data_frame.items():
