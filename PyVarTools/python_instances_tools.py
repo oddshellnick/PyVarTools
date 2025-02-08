@@ -37,56 +37,72 @@ def get_function_parameters(
 	}
 
 
-def get_class_fields(
+def get_class_attributes(
 		class_: type,
-		excluding_fields: typing.Optional[list[str]] = None,
-		start_exclude: typing.Optional[list[str]] = None,
-		end_exclude: typing.Optional[list[str]] = None
+		name_exclude: typing.Optional[typing.Union[list[str], str]] = None,
+		start_exclude: typing.Optional[typing.Union[list[str], str]] = None,
+		end_exclude: typing.Optional[typing.Union[list[str], str]] = None
 ) -> dict[str, typing.Any]:
 	"""
-	Retrieves the fields (non-callable attributes) of a given class.
+	Retrieves the attributes of a given class, allowing for exclusion based on name patterns.
 
 	Args:
 		class_ (type): The class to inspect.
-		excluding_fields (list[str], optional): A list of field names to exclude from the result. Defaults to None.
-		start_exclude (list[str], optional): A list of strings that if field name starts with it, then exclude this field. Defaults to None.
-		end_exclude (list[str], optional): A list of strings that if field name ends with it, then exclude this field. Defaults to None.
+		name_exclude (typing.Optional[typing.Union[list[str], str]]): A list or a single string of attribute names to exclude from the result. Defaults to None.
+		start_exclude (typing.Optional[typing.Union[list[str], str]]): A list or a single string. If an attribute name starts with any of these strings, it will be excluded. Defaults to None.
+		end_exclude (typing.Optional[typing.Union[list[str], str]]): A list or a single string. If an attribute name ends with any of these strings, it will be excluded. Defaults to None.
 
 	Returns:
-		dict[str, typing.Any]: A dictionary containing the class's fields, excluding those specified in `excluding_fields`,
-		 and also excluding methods (callable attributes) and special attributes (dunder methods).
+		dict[str, typing.Any]: A dictionary containing the class's attributes, excluding those matching the exclusion criteria.
 
 	:Usage:
 		class MyClass:
-			field1 = 1
-			field2 = "hello"
+			instance1 = 1
+			instance2 = "hello"
+			_private_instance = "secret"
+			instance_with_suffix_ = True
 
-			def my_method(self):
-				pass
+		get_class_instances(MyClass)
+		{'instance1': 1, 'instance2': 'hello', '_private_instance': 'secret', 'instance_with_suffix_': True}
 
-		get_class_fields(MyClass)
-		{'field1': 1, 'field2': 'hello'}
+		get_class_instances(MyClass, name_exclude='_private_instance')
+		{'instance1': 1, 'instance2': 'hello', 'instance_with_suffix_': True}
 
-		get_class_fields(MyClass, excluding_fields=['field1'])
-		{'field2': 'hello'}
+		get_class_instances(MyClass, start_exclude='_')
+		{'instance1': 1, 'instance2': 'hello', 'instance_with_suffix_': True}
+
+		get_class_instances(MyClass, end_exclude='_')
+		{'instance1': 1, 'instance2': 'hello', '_private_instance': 'secret'}
+
+		get_class_instances(MyClass, name_exclude=['_private_instance', 'instance_with_suffix_'], start_exclude='instance', end_exclude='2')
+		{}
 	"""
-	if excluding_fields is None:
-		excluding_fields = []
-	
-	if start_exclude is None:
-		start_exclude = []
-	
-	if end_exclude is None:
-		end_exclude = []
-	
-	start_exclude_func = lambda x: any(x.startswith(exclude) for exclude in start_exclude) if isinstance(start_exclude, list) else lambda x: False
-	end_exclude_func = lambda x: any(x.endswith(exclude) for exclude in end_exclude) if isinstance(end_exclude, list) else lambda x: False
+	name_exclude_func: typing.Callable[[str], bool] = (
+			(lambda x: x in name_exclude)
+			if isinstance(name_exclude, list)
+			else (lambda x: x == name_exclude)
+			if isinstance(name_exclude, str)
+			else (lambda x: False)
+	)
+	start_exclude_func: typing.Callable[[str], bool] = (
+			(lambda x: any(x.startswith(exclude) for exclude in start_exclude))
+			if isinstance(start_exclude, list)
+			else (lambda x: x.startswith(start_exclude))
+			if isinstance(start_exclude, str)
+			else (lambda x: False)
+	)
+	end_exclude_func: typing.Callable[[str], bool] = (
+			(lambda x: any(x.endswith(exclude) for exclude in end_exclude))
+			if isinstance(end_exclude, list)
+			else (lambda x: x.endswith(end_exclude))
+			if isinstance(end_exclude, str)
+			else (lambda x: False)
+	)
 	
 	return {
 		key: value
 		for key, value in class_.__dict__.items()
 		if not start_exclude_func(key)
 		and not end_exclude_func(key)
-		and not callable(value)
-		and key not in excluding_fields
+		and not name_exclude_func(key)
 	}
