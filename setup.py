@@ -37,6 +37,6 @@ setup(
 		description=get_description(),
 		long_description=get_long_description(),
 		long_description_content_type="text/markdown",
-		packages=find_packages(),
+		packages=find_packages(exclude=["unit_tests*"]),
 		install_requires=get_install_requires(),
 )
