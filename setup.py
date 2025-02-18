@@ -1,37 +1,30 @@
 import pathlib
 from setuptools import find_packages, setup
 
+def get_file(file_name: str) -> str:
+	file_path = pathlib.Path(file_name)
+
+	if file_path.is_file():
+		return open(file_path, "r", encoding="utf-8").read()
+	else:
+		raise FileNotFoundError(f"{file_name} not found")
+
 
 def get_long_description() -> str:
-	long_description_path = pathlib.Path("long_description.md")
-	
-	if long_description_path.is_file():
-		return open(long_description_path, "r", encoding="utf-8").read()
-	else:
-		raise FileNotFoundError("long_description.md not found")
+	return get_file("long_description.md")
 
 
 def get_install_requires() -> list[str]:
-	requirement_path = pathlib.Path("requirements.txt")
-	
-	if requirement_path.is_file():
-		return open(requirement_path, "r", encoding="utf-8").read().splitlines()
-	else:
-		raise FileNotFoundError("requirements.txt not found")
+	return get_file("requirements.txt").splitlines()
 
 
 def get_description() -> str:
-	description_path = pathlib.Path("description.txt")
-	
-	if description_path.is_file():
-		return open(description_path, "r", encoding="utf-8").read()
-	else:
-		raise FileNotFoundError("description.txt not found")
+	return get_file("description.txt")
 
 
 setup(
 		name="PyVarTools",
-		version="1.4.0",
+		version="1.4.1",
 		author="oddshellnick",
 		author_email="oddshellnick.programming@gmail.com",
 		description=get_description(),
