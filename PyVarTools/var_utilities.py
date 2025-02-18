@@ -1,23 +1,19 @@
 import re
-import typing
-import datetime
+from typing import Any, Generator
+from datetime import datetime, timedelta
 
 
-def date_range(
-		start_date: datetime.datetime,
-		end_date: datetime.datetime,
-		step: datetime.timedelta
-) -> typing.Generator[datetime.datetime, typing.Any, None]:
+def date_range(start_date: datetime, end_date: datetime, step: timedelta) -> Generator[datetime, Any, None]:
 	"""
 	Generates a sequence of dates within a given range.
 
 	Args:
-		start_date (datetime.datetime): The starting date of the range.
-		end_date (datetime.datetime): The ending date of the range (exclusive).
+		start_date (datetime): The starting date of the range.
+		end_date (datetime): The ending date of the range (exclusive).
 		step (timedelta): The time increment between each generated date.
 
 	Returns:
-		typing.Generator[datetime.datetime, typing.Any, None]: A generator yielding datetime objects.
+		Generator[datetime, Any, None]: A generator yielding datetime objects.
 
 	:Usage:
 		start = datetime(2024, 1, 1)

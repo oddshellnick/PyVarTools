@@ -1,6 +1,12 @@
 import math
 import numpy
-import typing
+from typing import (
+	Any,
+	Generator,
+	Literal,
+	Optional,
+	Union
+)
 
 
 class GraphPoint:
@@ -8,8 +14,8 @@ class GraphPoint:
 	Represents a point on a graph with x and y coordinates.
 
 	Attributes:
-		x (typing.Union[int, float]): The x-coordinate of the point.
-		y (typing.Union[int, float]): The y-coordinate of the point.
+		x (Union[int, float]): The x-coordinate of the point.
+		y (Union[int, float]): The y-coordinate of the point.
 
 	:Usage:
 		point = GraphPoint(1, 2)
@@ -19,13 +25,13 @@ class GraphPoint:
 		(1.5000, 2.5000)
 	"""
 	
-	def __init__(self, x: typing.Union[int, float], y: typing.Union[int, float]):
+	def __init__(self, x: Union[int, float], y: Union[int, float]):
 		"""
 		Initializes a new GraphPoint.
 
 		Args:
-			x (typing.Union[int, float]): The x-coordinate.
-			y (typing.Union[int, float]): The y-coordinate.
+			x (Union[int, float]): The x-coordinate.
+			y (Union[int, float]): The y-coordinate.
 		"""
 		self.x = x
 		self.y = y
@@ -162,24 +168,24 @@ class GraphSection:
 		
 		self.calculate_average()
 	
-	def get_angle_degree(self) -> typing.Optional[float]:
+	def get_angle_degree(self) -> Optional[float]:
 		"""
 		Calculates the angle of the section.
 
 		Returns:
-			typing.Optional[float]: The angle in degrees, or None if the section has less than two points.
+			Optional[float]: The angle in degrees, or None if the section has less than two points.
 		"""
 		if len(self.points) >= 2:
 			return calculate_angle_degree(self.points[0], self.points[-1])
 		else:
 			return None
 	
-	def get_direction(self) -> typing.Optional[str]:
+	def get_direction(self) -> Optional[str]:
 		"""
 		Determines the direction of the section.
 
 		Returns:
-			typing.Optional[str]: The direction ("increasing", "decreasing", "straight"), or None if the section has less than two points.
+			Optional[str]: The direction ("increasing", "decreasing", "straight"), or None if the section has less than two points.
 		"""
 		if len(self.points) >= 2:
 			angle = self.get_angle_degree()
@@ -245,14 +251,14 @@ class ThresholdSensitivity:
 	def __init__(
 			self,
 			threshold_sensitivity: float = 0.0,
-			type_: typing.Literal["absolute", "relative"] = "absolute"
+			type_: Literal["absolute", "relative"] = "absolute"
 	):
 		"""
 		Initializes a new ThresholdSensitivity object.
 
 		Args:
 			threshold_sensitivity (float): The sensitivity value. Defaults to 0.0.
-			type_ (typing.Literal["absolute", "relative"]): The type of sensitivity. Defaults to "absolute".
+			type_ (Literal["absolute", "relative"]): The type of sensitivity. Defaults to "absolute".
 
 		Raises:
 			ValueError: If type_ is not "absolute" or "relative".
@@ -263,12 +269,12 @@ class ThresholdSensitivity:
 		self.threshold_sensitivity = threshold_sensitivity
 		self.type_ = type_
 	
-	def get_decrease_sensitive_point(self, point: typing.Union[GraphPoint, int, float]) -> float:
+	def get_decrease_sensitive_point(self, point: Union[GraphPoint, int, float]) -> float:
 		"""
 		Calculates the decreased sensitive point based on the sensitivity type.
 
 		Args:
-			point (typing.Union[GraphPoint, int, float]): The point or value to adjust.
+			point (Union[GraphPoint, int, float]): The point or value to adjust.
 
 		Returns:
 			float: The decreased sensitive point.
@@ -281,12 +287,12 @@ class ThresholdSensitivity:
 		if self.type_ == "relative":
 			return decrease_sensitive_point * (1 - self.threshold_sensitivity)
 	
-	def get_increase_sensitive_point(self, point: typing.Union[GraphPoint, int, float]) -> float:
+	def get_increase_sensitive_point(self, point: Union[GraphPoint, int, float]) -> float:
 		"""
 		Calculates the increased sensitive point based on the sensitivity type.
 
 		Args:
-			point (typing.Union[GraphPoint, int, float]): The point or value to adjust.
+			point (Union[GraphPoint, int, float]): The point or value to adjust.
 
 		Returns:
 			float: The increased sensitive point.
@@ -306,21 +312,21 @@ class Graph:
 
 	Attributes:
 		points (list[GraphPoint]): The list of points in the graph.
-		min (typing.Optional[GraphPoint]): The point with the minimum y-value.
-		max (typing.Optional[GraphPoint]): The point with the maximum y-value.
-		average (typing.Optional[float]): The average y-value of all points.
+		min (Optional[GraphPoint]): The point with the minimum y-value.
+		max (Optional[GraphPoint]): The point with the maximum y-value.
+		average (Optional[float]): The average y-value of all points.
 
 	:Usage:
 		graph = Graph([GraphPoint(1, 1), GraphPoint(2, 2)])
 		(num_points: 2, min: 1, max: 2, average: 1.5000)
 	"""
 	
-	def __init__(self, points: typing.Optional[list[GraphPoint]] = None):
+	def __init__(self, points: Optional[list[GraphPoint]] = None):
 		"""
 		Initializes a new Graph object.
 
 		Args:
-			points (typing.Optional[list[GraphPoint]]): Initial list of points. Defaults to None.
+			points (Optional[list[GraphPoint]]): Initial list of points. Defaults to None.
 		"""
 		if points is not None:
 			self.points = points
@@ -361,7 +367,7 @@ class Graph:
 		Returns:
 			str: The string representation.
 		"""
-		return str(self)
+		return self.__str__()
 	
 	def calculate_average(self):
 		"""
@@ -390,19 +396,17 @@ class Graph:
 	def get_sections(
 			self,
 			threshold_sensitivity: ThresholdSensitivity = ThresholdSensitivity(),
-			angle_sensitivity: float = 0.0,
-			counter: typing.Any = None,
-	) -> typing.Generator[GraphSection, typing.Any, None]:
+			angle_sensitivity: float = 0.0
+	) -> Generator[GraphSection, Any, None]:
 		"""
 		Divides the graph into sections based on threshold and angle sensitivity.
 
 		Args:
 			threshold_sensitivity (ThresholdSensitivity, optional): The threshold sensitivity. Defaults to ThresholdSensitivity().
 			angle_sensitivity (float, optional): The angle sensitivity. Defaults to 0.0.
-			counter (typing.Any, optional): An object with a `step()` method (e.g., tqdm) for tracking progress. Defaults to None.
 
-		Yields:
-		   typing.Generator[GraphSection, Any, None]: A generator of GraphSections.
+		Returns:
+		   Generator[GraphSection, Any, None]: A generator of GraphSections.
 		"""
 		graph_section = None
 		
@@ -443,9 +447,6 @@ class Graph:
 					else:
 						yield graph_section
 						graph_section = GraphSection([self.points[i]], angle_sensitivity)
-		
-			if counter is not None:
-				counter.step()
 		
 		if graph_section is not None:
 			yield graph_section

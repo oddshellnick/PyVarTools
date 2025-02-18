@@ -1,5 +1,11 @@
-import typing
-import pandas
+from pandas import DataFrame
+from typing import (
+	Any,
+	Callable,
+	Hashable,
+	Optional,
+	Union
+)
 
 
 def format_integer(number: int, class_sep: str = " ") -> str:
@@ -46,44 +52,44 @@ def format_float(number: float, class_sep: str = " ", number_of_decimals: int = 
 
 
 def format_data_frame(
-		data_frame: pandas.DataFrame,
-		float_format: typing.Union[str, typing.Callable[[float], str]] = "%.2f",
-		integer_format: typing.Union[str, typing.Callable[[int], str]] = "%d",
-		columns_split: typing.Optional[str] = " || ",
-		header_border: typing.Optional[str] = "=",
-		top_border: typing.Optional[str] = "=",
-		left_border: typing.Optional[str] = "|| ",
-		bottom_border: typing.Optional[str] = "=",
-		right_border: typing.Optional[str] = " ||",
+		data_frame: DataFrame,
+		float_format: Union[str, Callable[[float], str]] = "%.2f",
+		integer_format: Union[str, Callable[[int], str]] = "%d",
+		columns_split: Optional[str] = " || ",
+		header_border: Optional[str] = "=",
+		top_border: Optional[str] = "=",
+		left_border: Optional[str] = "|| ",
+		bottom_border: Optional[str] = "=",
+		right_border: Optional[str] = " ||",
 ) -> str:
 	"""
 	Formats a Pandas DataFrame into a string representation with borders and custom formatting.
 
 	Args:
 		data_frame (DataFrame): The DataFrame to format.
-		float_format (typing.Union[str, typing.Callable[[float], str]]): The format string or a callable function for float values. Defaults to "%.2f".
-		integer_format (typing.Union[str, typing.Callable[[int], str]]): The format string or a callable function for integer values. Defaults to "%d".
-		columns_split (typing.Optional[str]): The string used to separate columns. Defaults to " || ".
-		header_border (typing.Optional[str]): The character used for the header border. Defaults to "=".
-		top_border (typing.Optional[str]): The character used for the top border. Defaults to "=".
-		left_border (typing.Optional[str]): The string used for the left border. Defaults to "|| ".
-		bottom_border (typing.Optional[str]): The character used for the bottom border. Defaults to "=".
-		right_border (typing.Optional[str]): The string used for the right border. Defaults to " ||".
+		float_format (Union[str, Callable[[float], str]]): The format string or a callable function for float values. Defaults to "%.2f".
+		integer_format (Union[str, Callable[[int], str]]): The format string or a callable function for integer values. Defaults to "%d".
+		columns_split (Optional[str]): The string used to separate columns. Defaults to " || ".
+		header_border (Optional[str]): The character used for the header border. Defaults to "=".
+		top_border (Optional[str]): The character used for the top border. Defaults to "=".
+		left_border (Optional[str]): The string used for the left border. Defaults to "|| ".
+		bottom_border (Optional[str]): The character used for the bottom border. Defaults to "=".
+		right_border (Optional[str]): The string used for the right border. Defaults to " ||".
 
 	Returns:
 		str: The formatted string representation of the DataFrame.
 
 	:Usage:
-		df = pandas.DataFrame({'A': [1, 2.5, 3], 'B': [4, 5, 6]})
-		=====================
-		|| A || B ||
-		=====================
+		df = DataFrame({'A': [1, 2.5, 3], 'B': [4, 5, 6]})
+		=============
+		|| A  || B ||
+		=============
 		|| 1  || 4 ||
 		|| 2.5|| 5 ||
 		|| 3  || 6 ||
-		=====================
+		=============
 	"""
-	new_dataframe: dict[typing.Hashable, typing.Any] = {}
+	new_dataframe: dict[Hashable, Any] = {}
 	
 	for header, column in data_frame.items():
 		new_dataframe[header] = []
@@ -107,7 +113,7 @@ def format_data_frame(
 	
 			new_dataframe[header].append(value)
 	
-	data_frame = pandas.DataFrame(
+	data_frame = DataFrame(
 			{
 				header.__str__(): [header.__str__()] +
 				new_dataframe[header]
