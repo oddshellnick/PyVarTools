@@ -273,7 +273,7 @@ class TestNEGATIVE_INFINITY(TestCase):
 		self.assertEqual(round(self.neg_inf), NEGATIVE_INFINITY())
 		self.assertEqual(round(self.neg_inf, 2), NEGATIVE_INFINITY())
 	
-	@parameterized.expand([(2, 0), (1, 1), (0, 0), (-1, 0), (NEGATIVE_INFINITY(), 0), (INFINITY(), 0),])
+	@parameterized.expand([(2, 0), (1, 1), (0, 0), (-1, -1), (-2, 0), (NEGATIVE_INFINITY(), 0), (INFINITY(), 0),])
 	def test_rpow(self, power, expected):
 		self.assertEqual(power ** self.neg_inf, expected)
 	
@@ -592,7 +592,7 @@ class TestINFINITY(TestCase):
 				(2, INFINITY()),
 				(1, 1),
 				(0, 0),
-				(-1, INFINITY()),
+				(-1, -1),
 				(NEGATIVE_INFINITY(), NEGATIVE_INFINITY()),
 				(INFINITY(), INFINITY()),
 			]
