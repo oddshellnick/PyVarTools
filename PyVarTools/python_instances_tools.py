@@ -53,7 +53,7 @@ def get_class_attributes(
 		end_exclude (typing.Optional[typing.Union[list[str], str]]): A list or a single string. If an attribute name ends with any of these strings, it will be excluded. Defaults to None.
 
 	Returns:
-		dict[str, typing.Any]: A dictionary containing the class's attributes, excluding those matching the exclusion criteria.
+		dict[str, typing.Any]: A dictionary containing the class's instances (attributes), excluding those matching the exclusion criteria.
 
 	:Usage:
 		class MyClass:
